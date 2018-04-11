@@ -1,0 +1,4 @@
+nginx-ingress/
+server
+certs/
+NOTES.md

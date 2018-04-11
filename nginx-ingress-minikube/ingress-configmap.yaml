@@ -1,0 +1,23 @@
+apiVersion: v1
+data:
+  # see https://github.com/kubernetes/ingress-nginx/blob/master/docs/user-guide/configmap.md for all possible options and their description
+  map-hash-bucket-size: "128"
+  hsts: "false"
+kind: ConfigMap
+metadata:
+  name: nginx-load-balancer-conf
+  namespace: ingress-nginx
+  labels:
+    addonmanager.kubernetes.io/mode: EnsureExists
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tcp-services
+  namespace: ingress-nginx
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: udp-services
+  namespace: ingress-nginx

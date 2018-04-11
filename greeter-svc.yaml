@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: greeter-server
+  namespace: grpc
+  labels:
+    app: greeter-server
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: greeter-server
+    spec:
+      containers:
+      - name: greeter-server
+        image: example-grpc:0.0.1
+        ports:
+        - containerPort: 50051
+          name: grpc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: greeter-server
+  namespace: grpc
+  labels:
+    app: greeter-server
+spec:
+  ports:
+  - port: 50051
+    targetPort: 50051
+    protocol: TCP
+    name: grpc
+  selector:
+    app: greeter-server
