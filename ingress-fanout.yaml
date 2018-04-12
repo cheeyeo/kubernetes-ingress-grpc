@@ -1,0 +1,32 @@
+# https://kubernetes.io/docs/concepts/services-networking/ingress/#simple-fanout
+# Use one host, different service paths
+# Not working at the moment
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    # pass ssl to app backend
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # nginx.ingress.kubernetes.io/secure-backends: "true"
+    nginx.ingress.kubernetes.io/grpc-backend: "true"
+    #ingress.kubernetes.io/rewrite-target: /
+    #nginx.ingress.kubernetes.io/rewrite-target: /
+  name: ingress-fanout
+  namespace: grpc
+spec:
+  tls:
+  - secretName: tls-secret
+  rules:
+  - host: grpc.example.com
+    http:
+      paths:
+      - path: /helloworld.Greeter
+        backend:
+          serviceName: greeter-server-plain
+          servicePort: 50051
+      - path: /helloworld.Dispatcher
+        backend:
+          serviceName: dispatcher-server-plain
+          servicePort: 50051

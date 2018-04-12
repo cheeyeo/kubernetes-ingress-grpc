@@ -14,7 +14,7 @@ const (
 	// for talking to docker container locally
 	// address = "grpc-docker.example.com:50051"
 	// for testing ingress
-	address = "grpc-ingress.example.com:443"
+	address = "grpc-greeter.example.com:443"
 	//address = "localhost:50051"
 	defaultName = "world"
 )

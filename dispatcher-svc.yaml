@@ -1,19 +1,19 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: greeter-server
+  name: dispatcher-server
   namespace: grpc
   labels:
-    app: greeter-server
+    app: dispatcher-server
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: greeter-server
+        app: dispatcher-server
     spec:
       containers:
-      - name: greeter-server
+      - name: dispatcher-server
         image: example-grpc:0.0.2
         ports:
         - containerPort: 50051
@@ -24,10 +24,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: greeter-server
+  name: dispatcher-server
   namespace: grpc
   labels:
-    app: greeter-server
+    app: dispatcher-server
 spec:
   ports:
   - port: 50051
@@ -35,4 +35,4 @@ spec:
     protocol: TCP
     name: grpc
   selector:
-    app: greeter-server
+    app: dispatcher-server

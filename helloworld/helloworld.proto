@@ -11,6 +11,20 @@ service Greeter {
   rpc SayHelloAgain (HelloRequest) returns (HelloReply) {}
 }
 
+service Dispatcher {
+  rpc TestDispatch (DispatchRequest) returns (DispatchReply) {}
+}
+
+// dispatch request messages
+message DispatchRequest {
+  string title = 1;
+}
+
+// dispatcher response message
+message DispatchReply {
+  string message = 1;
+}
+
 // The request message
 message HelloRequest {
   string name = 1;

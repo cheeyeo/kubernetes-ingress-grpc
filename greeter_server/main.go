@@ -17,8 +17,16 @@ const (
 	port = ":50051"
 )
 
-// server is used to implement helloworld.GreeterServer.
+// server is used to implement helloworld.Greeter
 type server struct{}
+
+// dispatcher is used to implement helloworld.Dispatcher
+type dispatcher struct{}
+
+func (d *dispatcher) TestDispatch(ctx context.Context, in *pb.DispatchRequest) (*pb.DispatchReply, error) {
+	glog.Infof("Inside TestDispatch: %v\n", in)
+	return &pb.DispatchReply{Message: "Dispatcher: " + in.Title}, nil
+}
 
 func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
 	glog.Infof("Inside SayHello: %v\n", in)
@@ -44,11 +52,6 @@ func main() {
 	//   glog.Fatal("Failed to listen: %v\n", err)
 	// }
 
-	lis, err := net.Listen("tcp", port)
-	if err != nil {
-		glog.Fatal("Failed to listen: %v\n", err)
-	}
-
 	// grab the tls certs
 	creds, err := credentials.NewServerTLSFromFile("certs/tls.crt", "certs/tls.key")
 	if err != nil {
@@ -64,11 +67,12 @@ func main() {
 
 	s := grpc.NewServer(opts...)
 	pb.RegisterGreeterServer(s, &server{})
+	pb.RegisterDispatcherServer(s, &dispatcher{})
 
 	// Test reflection with grpcurl
 	reflection.Register(s)
 
-	glog.Infof("Greeter Server running on TCP port %s", port)
+	glog.Infof("GRPC Server running on TCP port %s", port)
 
 	if err := s.Serve(lis); err != nil {
 		glog.Fatal("Failed to serve: %v\n", err)

@@ -7,14 +7,14 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
     nginx.ingress.kubernetes.io/secure-backends: "true"
     nginx.ingress.kubernetes.io/grpc-backend: "true"
-  name: greeter-ingress
+  name: dispatcher-ingress
   namespace: grpc
 spec:
   rules:
-  - host: grpc-greeter.example.com
+  - host: grpc-dispatcher.example.com
     http:
       paths:
       - path: /
         backend:
-          serviceName: greeter-server
+          serviceName: dispatcher-server
           servicePort: 50051
