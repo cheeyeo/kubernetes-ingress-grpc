@@ -105,6 +105,38 @@ Note that since we are using `nginx.ingress.kubernetes.io/ssl-passthrough` for t
 https://github.com/kubernetes/ingress-nginx/issues/2329
 
 
+# On using ssl-passthrough:
+
+In order to use ```grpcs``` and be able to post additional data through the client, you need to enable ```ssl-passthrough``` in the ingress and also the ingress controller.
+
+This is because nginx does not support http2 upstream. (https://github.com/kubernetes/ingress-nginx/issues/39)
+
+Example error from the ingress controller pod when posting additional data from the client:
+```
+2018/04/23 19:16:54 [error] 183#183: *22 upstream sent invalid http2 table index: 64 while reading response header from upstream, client: 192.168.99.1, server: grpc-greeter.example.com, request: "POST /helloworld.Greeter/SayHello HTTP/2.0", upstream: "grpcs://172.17.0.6:50051", host: "grpc-greeter.example.com:443"
+
+2018/04/23 19:16:54 [error] 183#183: *22 upstream sent invalid header while reading response header from upstream, client: 192.168.99.1, server: grpc-greeter.example.com, request: "POST /helloworld.Greeter/SayHello HTTP/2.0", upstream: "grpcs://172.17.0.6:50051", host: "grpc-greeter.example.com:443"
+```
+
+# On routing grpc traffic
+
+At the moment, its not possible to define multiple paths in the same ingress resource for different grpc endpoints.
+
+Assuming I have the same grpc service but with 2 endpoints: ```/helloworld.Greeter/SayHello``` and ```/helloworld.Dispatcher/SayHello``` and I defined both using separate paths in the same ingress resource.
+
+The ingress controller logs the following errors:
+
+```
+W0423 19:39:30.408628       7 controller.go:702] error obtaining service endpoints: error getting service grpc/dispatcher-server from the cache: service grpc/dispatcher-server was not found
+W0423 19:39:30.409324       7 controller.go:549] ignoring ssl passthrough of grpc-greeter.example.com as it doesn't have a default backend (root context)
+W0423 19:39:30.409500       7 controller.go:549] ignoring ssl passthrough of grpc-dispatcher.example.com as it doesn't have a default backend (root context)
+W0423 19:39:30.410339       7 controller.go:141] ignoring path /helloworld.Dispatcher of ssl passthrough host grpc-dispatcher.example.com
+W0423 19:39:30.410548       7 controller.go:141] ignoring path /helloworld.Greeter of ssl passthrough host grpc-greeter.example.com
+
+```
+
+The solution is to create different ingress resource for each of them.
+
 # TODO:
 
 * Makefile to automate some of the build process above
@@ -112,8 +144,6 @@ https://github.com/kubernetes/ingress-nginx/issues/2329
 * Use grpcurl to test for grpc services endpoints
 
 * Extend example to include multiple grpc services
-
-* Figure out why ssl termination does not work
 
 
 # References:
