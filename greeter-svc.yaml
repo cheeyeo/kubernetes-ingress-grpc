@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: greeter-server
-        image: example-grpc:0.0.2
+        image: example-grpc:0.0.1
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 50051
           name: grpc

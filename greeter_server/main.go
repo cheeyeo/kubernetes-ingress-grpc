@@ -52,6 +52,11 @@ func main() {
 	//   glog.Fatal("Failed to listen: %v\n", err)
 	// }
 
+	lis, err := net.Listen("tcp", port)
+	if err != nil {
+		glog.Fatal("Failed to listen: %v\n", err)
+	}
+
 	// grab the tls certs
 	creds, err := credentials.NewServerTLSFromFile("certs/tls.crt", "certs/tls.key")
 	if err != nil {
