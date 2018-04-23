@@ -19,8 +19,8 @@ spec:
       serviceAccountName: nginx-ingress-serviceaccount
       terminationGracePeriodSeconds: 60
       containers:
-      - image: quay.io/aledbf/nginx-ingress-controller:0.353
-        #image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.13.0
+      - image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.13.0
+        #image: quay.io/aledbf/nginx-ingress-controller:0.353
         name: nginx-ingress-controller
         imagePullPolicy: IfNotPresent
         args:

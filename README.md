@@ -23,9 +23,11 @@ kubectl create namespace ingress-nginx
 
 kubectl create -f nginx-ingress-minikube/ingress-configmap.yaml
 
-kubectl create -f nginx-ingress-minikube/ingress-rc.yaml
+kubectl create -f nginx-ingress-minikube/ingress-default-backend.yaml
 
-kubectl create -f nginx-ingress-minikube/ingress-svc.yaml
+kubectl create -f nginx-ingress-minikube/ingress-rbac.yaml
+
+kubectl create -f nginx-ingress-minikube/ingress-rc.yaml
 ```
 
 Check that all pods are up and running:

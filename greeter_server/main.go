@@ -2,13 +2,11 @@ package main
 
 import (
 	"log"
-	//"crypto/tls"
-	"net"
+	"crypto/tls"
 
 	"github.com/golang/glog"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/reflection"
 	pb "grpc.io/tutorial/helloworld/helloworld"
 )
@@ -41,33 +39,21 @@ func (s *server) SayHelloAgain(ctx context.Context, in *pb.HelloRequest) (*pb.He
 func main() {
 	// Recommended from nginx blog
 	// Sets grpcs on the tcp
-	// cer, err := tls.LoadX509KeyPair("certs/tls.crt", "certs/tls.key")
-	// if err != nil {
-	//   glog.Fatal("Failed to load key pair: %v\n", err)
-	// }
-
-	// config := &tls.Config{ Certificates: []tls.Certificate{cer} }
-	// lis, err := tls.Listen("tcp", port, config)
-	// if err != nil {
-	//   glog.Fatal("Failed to listen: %v\n", err)
-	// }
-
-	lis, err := net.Listen("tcp", port)
+	cer, err := tls.LoadX509KeyPair("certs/tls.crt", "certs/tls.key")
 	if err != nil {
-		glog.Fatal("Failed to listen: %v\n", err)
+	  glog.Fatal("Failed to load key pair: %v\n", err)
 	}
 
-	// grab the tls certs
-	creds, err := credentials.NewServerTLSFromFile("certs/tls.crt", "certs/tls.key")
+	config := &tls.Config{ Certificates: []tls.Certificate{cer} }
+	lis, err := tls.Listen("tcp", port, config)
 	if err != nil {
-		glog.Fatalf("Could not load TLS certs %s", err)
+	  glog.Fatal("Failed to listen: %v\n", err)
 	}
 
 	//create array of grpc options with creds
 	opts := []grpc.ServerOption{
 		grpc.MaxConcurrentStreams(200),
 		grpc.UnaryInterceptor(loggingUnaryInterceptor),
-		grpc.Creds(creds),
 	}
 
 	s := grpc.NewServer(opts...)
