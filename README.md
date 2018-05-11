@@ -28,6 +28,8 @@ kubectl create -f nginx-ingress-minikube/ingress-default-backend.yaml
 kubectl create -f nginx-ingress-minikube/ingress-rbac.yaml
 
 kubectl create -f nginx-ingress-minikube/ingress-rc.yaml
+
+kubectl create -f nginx-ingress-minikube/ingress-svc.yaml
 ```
 
 Check that all pods are up and running:
@@ -139,11 +141,7 @@ The solution is to create different ingress resource for each of them.
 
 # TODO:
 
-* Makefile to automate some of the build process above
-
 * Use grpcurl to test for grpc services endpoints
-
-* Extend example to include multiple grpc services
 
 
 # References:
